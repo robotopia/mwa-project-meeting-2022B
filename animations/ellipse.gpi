@@ -5,13 +5,23 @@
 load "colors.gpi"
 call "clock.gpi" ARG1 ARG2
 
+xlo = -1; xhi = 1
+ylo = -1; yhi = 1
+
+set xrange [xlo:xhi]
+set yrange [ylo:yhi]
+
+unset border
+unset key
+unset tics
+
 set output sprintf("frames/ellipse_%02d.png", frame)
 
 set parametric
-set dummy y
+set dummy th
 
-set urange [0:10]
-set samples 100
+set trange [0:2*pi]
+set samples 1000
 
 λ = 2*pi
 k = 2*pi/λ
@@ -21,4 +31,11 @@ t = clock
 
 wave(x,t,θ) = sin(k*x - ω*t + θ)
 
-plot 
+Δθ = pi/7 # The phase difference between X and Y polarisations (0 = linear polarisation, pi/2 = circular polarisation)
+Ax = 0.7
+Ay = sqrt(1 - Ax**2)
+
+set arrow 1 from xlo,0 to xhi,0 lc rgb "white" heads
+set arrow 2 from 0,ylo to 0,yhi lc rgb "white" heads
+
+plot Ax*wave(0, t, 0), Ay*wave(0, t, Δθ) with lines
