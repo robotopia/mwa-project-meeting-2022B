@@ -3,11 +3,13 @@ NFRAMES = 64
 EANDB_FRAMES = $(patsubst %,frames/EandB_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
 EANDB45_FRAMES = $(patsubst %,frames/EandB45_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
 EANDBCIRC_FRAMES = $(patsubst %,frames/EandBcirc_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
+ECIRC_FRAMES = $(patsubst %,frames/Ecirc_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
 ELLIPSE_FRAMES = $(patsubst %,frames/ellipse_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
 
 TARGETS = EandB.gif \
 		  EandB45.gif \
 		  EandBcirc.gif \
+		  Ecirc.gif \
 		  ellipse.gif
 
 all: $(TARGETS)
@@ -21,6 +23,9 @@ EandB45.gif: $(EANDB45_FRAMES)
 	convert -loop 0 -delay 5 -dispose previous $^ $@
 
 EandBcirc.gif: $(EANDBCIRC_FRAMES)
+	convert -loop 0 -delay 5 -dispose previous $^ $@
+
+Ecirc.gif: $(ECIRC_FRAMES)
 	convert -loop 0 -delay 5 -dispose previous $^ $@
 
 ellipse.gif: $(ELLIPSE_FRAMES)
@@ -37,6 +42,10 @@ frames/EandB45_%.png: EandB45.gpi
 	gnuplot -c $< $* $(NFRAMES)
 
 frames/EandBcirc_%.png: EandBcirc.gpi
+	@mkdir -p frames
+	gnuplot -c $< $* $(NFRAMES)
+
+frames/Ecirc_%.png: Ecirc.gpi
 	@mkdir -p frames
 	gnuplot -c $< $* $(NFRAMES)
 

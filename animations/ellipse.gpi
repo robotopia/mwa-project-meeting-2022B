@@ -2,40 +2,44 @@
 #   1. frame number (0-indexed integer)
 #   2. number of frames
 
-load "colors.gpi"
+set terminal pngcairo background rgb "black"
 call "clock.gpi" ARG1 ARG2
+set lmargin at screen 0.01
+set rmargin at screen 0.99
+set bmargin at screen 0.01
+set tmargin at screen 0.99
 
 xlo = -1; xhi = 1
 ylo = -1; yhi = 1
 
 set xrange [xlo:xhi]
 set yrange [ylo:yhi]
+set cbrange [0:2*pi]
 
 unset border
 unset key
 unset tics
+unset colorbox
 
 set output sprintf("frames/ellipse_%02d.png", frame)
 
 set parametric
-set dummy th
 
-set trange [0:2*pi]
+set urange [0:2*pi]
 set samples 1000
 
-λ = 2*pi
-k = 2*pi/λ
-c = λ/1     # "1" is the clock time for all frames
-ω = c/k
-t = clock
+t = -clock*2*pi
 
-wave(x,t,θ) = sin(k*x - ω*t + θ)
-
-Δθ = pi/7 # The phase difference between X and Y polarisations (0 = linear polarisation, pi/2 = circular polarisation)
-Ax = 0.7
+Δθ = pi/5 # The phase difference between X and Y polarisations (0 = linear polarisation, pi/2 = circular polarisation)
+Ax = 0.4
 Ay = sqrt(1 - Ax**2)
 
-set arrow 1 from xlo,0 to xhi,0 lc rgb "white" heads
-set arrow 2 from 0,ylo to 0,yhi lc rgb "white" heads
+set arrow 1 from xlo,0 to xhi,0 lc rgb "white" heads front
+set arrow 2 from 0,ylo to 0,yhi lc rgb "white" heads front
 
-plot Ax*wave(0, t, 0), Ay*wave(0, t, Δθ) with lines
+set arrow 3 from 0,0 to Ax*sin(t), Ay*sin(t+Δθ) lc rgb "yellow"
+
+set pm3d map
+set palette defined (0 "#ffff00", 1 "#000000")
+
+splot Ax*sin(u+t), Ay*sin(u+t+Δθ), u**2 with lines lt 2 lw 3 lc palette z
