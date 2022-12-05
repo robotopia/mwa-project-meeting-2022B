@@ -1,5 +1,9 @@
 # Materials for the talk "A Review of MWA Polarisation"
 
+## Dependencies
+
+- `gnuplot >= 5.4.5`
+
 ## Contents
 
 ### Animation

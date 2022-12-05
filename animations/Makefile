@@ -11,7 +11,8 @@ TARGETS = EandB.gif \
 		  EandB45.gif \
 		  EandBcirc.gif \
 		  Ecirc.gif \
-		  ellipse.gif
+		  ellipse.gif \
+		  vela.gif
 
 all: $(TARGETS)
 
@@ -59,7 +60,7 @@ frames/ellipse_%.png: ellipse.gpi
 	@mkdir -p frames
 	gnuplot -c $< $* $(NFRAMES)
 
-frames/vela_%.png: vela.gpi
+frames/vela_%.png: vela.gpi J0835-4510.1400MHz.txt
 	@mkdir -p frames
 	gnuplot -c $< $* $(NFRAMES)
 
