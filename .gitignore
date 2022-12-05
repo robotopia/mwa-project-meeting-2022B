@@ -1,2 +1,6 @@
+# Output images
 *.png
 *.gif
+
+# Miscellaneous
+J0835-4510.1400MHz.txt

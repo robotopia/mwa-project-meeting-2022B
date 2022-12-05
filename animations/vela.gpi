@@ -1,0 +1,51 @@
+# This script takes two arguments:
+#   1. frame number (0-indexed integer)
+#   2. number of frames
+
+frontcolor = "white"
+backcolor = "black"
+profilecolor = "#88ff44"
+
+set terminal pngcairo background rgb backcolor
+call "clock.gpi" ARG1 ARG2
+set output sprintf("frames/vela_%02d.png", frame)
+
+unset border
+unset tics
+unset key
+set lmargin at screen 0.01
+set rmargin at screen 0.99
+set bmargin at screen 0.11
+set tmargin at screen 0.99
+
+P0 = 0.089328385024 # seconds
+W10 = 3.8e-3 # seconds
+infile = "J0835-4510.1400MHz.txt"
+
+stats infile u 4 nooutput
+nbins = STATS_records
+binpeak = STATS_index_max
+binradius = W10*1.5/P0 * nbins
+binwidth = 2*binradius
+
+binlo = floor(binpeak - binradius)
+binhi = floor(binpeak + binradius)
+
+binstart = binlo
+binstop = 2*binhi - binlo # Extends out to twice the width of the visible plot
+binnow = floor(clock*(binstop - binstart)) + binstart
+
+set xrange [binlo:binhi]
+set yrange [STATS_min:STATS_max]
+
+timespan = (binhi - binlo)*P0/nbins # in seconds
+set style textbox 1 opaque fillcolor rgb backcolor noborder margins 5,0
+set arrow 1 from screen 0.01, 0.05 to screen 0.99, 0.05 heads back lc rgb frontcolor lw 2
+set label 1 sprintf("%.1f ms", timespan*1e3) at screen 0.5, 0.05 font ",16" tc rgb frontcolor center boxed bs 1 front
+
+# And now for the magic color animation!
+set palette defined (0 backcolor, 1 profilecolor)
+col(x) = (binnow >= binlo && binnow < binhi ? x : (x < binnow - binwidth ? 0 : (x - (binnow - binwidth))/binwidth))
+
+set pm3d map
+splot infile u 3:4:(col($3)) every ::binstart::binnow with lines lw 2 lc palette z

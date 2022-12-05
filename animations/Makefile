@@ -5,6 +5,7 @@ EANDB45_FRAMES = $(patsubst %,frames/EandB45_%.png,$(shell seq -w 0 $(NFRAMES) |
 EANDBCIRC_FRAMES = $(patsubst %,frames/EandBcirc_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
 ECIRC_FRAMES = $(patsubst %,frames/Ecirc_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
 ELLIPSE_FRAMES = $(patsubst %,frames/ellipse_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
+VELA_FRAMES = $(patsubst %,frames/vela_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
 
 TARGETS = EandB.gif \
 		  EandB45.gif \
@@ -15,6 +16,7 @@ TARGETS = EandB.gif \
 all: $(TARGETS)
 
 #------------------------------------------
+# Converting sets of PNGs to GIFs
 
 EandB.gif: $(EANDB_FRAMES)
 	convert -loop 0 -delay 5 -dispose previous $^ $@
@@ -31,7 +33,11 @@ Ecirc.gif: $(ECIRC_FRAMES)
 ellipse.gif: $(ELLIPSE_FRAMES)
 	convert -loop 0 -delay 5 -dispose previous $^ $@
 
+vela.gif: $(VELA_FRAMES)
+	convert -loop 0 -delay 5 -dispose previous $^ $@
+
 #------------------------------------------
+# Creating the individual PNG frames
 
 frames/EandB_%.png: EandB.gpi
 	@mkdir -p frames
@@ -53,7 +59,12 @@ frames/ellipse_%.png: ellipse.gpi
 	@mkdir -p frames
 	gnuplot -c $< $* $(NFRAMES)
 
+frames/vela_%.png: vela.gpi
+	@mkdir -p frames
+	gnuplot -c $< $* $(NFRAMES)
+
 #------------------------------------------
+# Miscellaneous
 
 # The source file for the Vela pulsar's profile (from EPN database)
 J0835-4510.1400MHz.txt:
