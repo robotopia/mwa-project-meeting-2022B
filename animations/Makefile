@@ -6,13 +6,15 @@ EANDBCIRC_FRAMES = $(patsubst %,frames/EandBcirc_%.png,$(shell seq -w 0 $(NFRAME
 ECIRC_FRAMES = $(patsubst %,frames/Ecirc_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
 ELLIPSE_FRAMES = $(patsubst %,frames/ellipse_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
 VELA_FRAMES = $(patsubst %,frames/vela_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
+VELAPOL_FRAMES = $(patsubst %,frames/velapol_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
 
 TARGETS = EandB.gif \
 		  EandB45.gif \
 		  EandBcirc.gif \
 		  Ecirc.gif \
 		  ellipse.gif \
-		  vela.gif
+		  vela.gif \
+		  velapol.gif
 
 all: $(TARGETS)
 
@@ -35,6 +37,9 @@ ellipse.gif: $(ELLIPSE_FRAMES)
 	convert -loop 0 -delay 5 -dispose previous $^ $@
 
 vela.gif: $(VELA_FRAMES)
+	convert -loop 0 -delay 5 -dispose previous $^ $@
+
+velapol.gif: $(VELAPOL_FRAMES)
 	convert -loop 0 -delay 5 -dispose previous $^ $@
 
 #------------------------------------------
@@ -60,7 +65,11 @@ frames/ellipse_%.png: ellipse.gpi
 	@mkdir -p frames
 	gnuplot -c $< $* $(NFRAMES)
 
-frames/vela_%.png: vela.gpi J0835-4510.1400MHz.txt
+frames/vela_%.png: vela.gpi velastats.gpi J0835-4510.1400MHz.txt
+	@mkdir -p frames
+	gnuplot -c $< $* $(NFRAMES)
+
+frames/velapol_%.png: velapol.gpi velastats.gpi J0835-4510.1400MHz.txt
 	@mkdir -p frames
 	gnuplot -c $< $* $(NFRAMES)
 

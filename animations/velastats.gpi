@@ -1,0 +1,31 @@
+P0 = 0.089328385024 # seconds
+W10 = 3.8e-3 # seconds
+infile = "J0835-4510.1400MHz.txt"
+
+stats infile u 4 name 'I' nooutput
+stats infile u 5 name 'Q' nooutput
+stats infile u 6 name 'U' nooutput
+stats infile u 7 name 'V' nooutput
+
+nbins = I_records
+binpeak = I_index_max
+
+binradius = W10*1.5/P0 * nbins
+binwidth = 2*binradius
+
+binlo = floor(binpeak - binradius)
+binhi = floor(binpeak + binradius)
+
+binstart = binlo
+binstop = 2*binhi - binlo # Extends out to twice the width of the visible plot
+
+stats infile u 4 every ::::binlo name 'Inoise' nooutput
+stats infile u 5 every ::::binlo name 'Qnoise' nooutput
+stats infile u 6 every ::::binlo name 'Unoise' nooutput
+stats infile u 7 every ::::binlo name 'Vnoise' nooutput
+
+I(x) = x - Inoise_mean
+Q(x) = x - Qnoise_mean
+U(x) = x - Unoise_mean
+V(x) = x - Vnoise_mean
+
