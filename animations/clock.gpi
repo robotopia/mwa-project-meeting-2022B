@@ -1,0 +1,4 @@
+frame   = ARG1 + 0  # 0-indexed
+nframes = ARG2 + 0
+
+clock = frame*1.0/nframes # A number in the range [0,1)
