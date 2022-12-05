@@ -4,22 +4,25 @@ EANDB_FRAMES = $(patsubst %,frames/EandB_%.png,$(shell seq -w 0 $(NFRAMES) | hea
 EANDB45_FRAMES = $(patsubst %,frames/EandB45_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
 EANDBCIRC_FRAMES = $(patsubst %,frames/EandBcirc_%.png,$(shell seq -w 0 $(NFRAMES) | head -n-1))
 
-all: EandB.gif EandB45.gif
+all: EandB.gif EandB45.gif EandBcirc.gif
 
 EandB.gif: $(EANDB_FRAMES)
 	convert -loop 0 -delay 5 -dispose previous $^ $@
 
 frames/EandB_%.png: EandB.gpi
+	@mkdir -p frames
 	gnuplot -c $< $* $(NFRAMES)
 
 EandB45.gif: $(EANDB45_FRAMES)
 	convert -loop 0 -delay 5 -dispose previous $^ $@
 
 frames/EandB45_%.png: EandB45.gpi
+	@mkdir -p frames
 	gnuplot -c $< $* $(NFRAMES)
 
 EandBcirc.gif: $(EANDBCIRC_FRAMES)
 	convert -loop 0 -delay 5 -dispose previous $^ $@
 
 frames/EandBcirc_%.png: EandBcirc.gpi
+	@mkdir -p frames
 	gnuplot -c $< $* $(NFRAMES)
