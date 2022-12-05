@@ -1,0 +1,9 @@
+load "view.gpi"
+
+unset key
+unset border
+unset tics
+
+set arrow 1 from xlo,0,0 to xhi,0,0 heads lc "white" 
+set arrow 2 from 0,ylo,0 to 0,yhi,0 lc "white"
+set arrow 3 from 0,0,zlo to 0,0,zhi heads lc "white"

@@ -1,0 +1,5 @@
+set terminal pngcairo transparent
+
+set lt 1 lc "cyan"
+set lt 2 lc "yellow"
+

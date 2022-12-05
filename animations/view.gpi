@@ -1,0 +1,10 @@
+xlo = -1; xhi = 1
+ylo = 0;  yhi = 10
+zlo = -1; zhi = 1
+
+set xrange [xlo:xhi]
+set yrange [ylo:yhi]
+set zrange [zlo:zhi]
+
+set view equal xyz
+set view 78, 156, 4.6, 1

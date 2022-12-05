@@ -1,0 +1,12 @@
+load "colors.gpi"
+load "axes.gpi"
+
+set output "EandB.png"
+
+set parametric
+
+set urange [0:10]
+set samples 100
+
+splot 0, u, sin(u) with lines, \
+      sin(u), u, 0 with lines
