@@ -5,6 +5,7 @@
 frontcolor = "white"
 backcolor = "black"
 profilecolor = "#88ff44"
+profile2color = "#ff5555"
 
 set terminal pngcairo background rgb backcolor
 call "clock.gpi" ARG1 ARG2
@@ -31,9 +32,35 @@ set arrow 1 from screen 0.01, 0.05 to screen 0.99, 0.05 heads back lc rgb frontc
 set label 1 sprintf("%.1f ms", timespan*1e3) at screen 0.5, 0.05 font ",16" tc rgb frontcolor center boxed bs 1 front
 
 # And now for the magic color animation!
-set palette defined (0 backcolor, 1 profilecolor)
-col(x) = (binnow >= binlo && binnow < binhi ? x : (x < binnow - binwidth ? 0 : (x - (binnow - binwidth))/binwidth))
+set palette defined (0 backcolor, 0.9 profilecolor, 1 profile2color, 2 backcolor, 3 "yellow")
+#                    +--------------------------------------------+  +---------------------+
+#                    This range for the profile                      This range for ellipses
+set cbrange [0:3]
+
+col(x) = (binnow >= binlo && binnow < binhi ? (x - binlo)/(binnow - binlo) : (x < binnow - binwidth ? 0 : (x - (binnow - binwidth))/binwidth))
+
+# How many polarisation ellipses should be drawn across the pulse window?
+nellipses = 10
+# The distance between each ellipse (in units of bins)
+ellipse_sep = binW10/(nellipses - 1)
+# Where will they be drawn?
+binellipse(n) = binpeak - binW10/2 + binW10/4 + n*ellipse_sep
+# How many will actually be drawn, considering which frame we're up to?
+ndrawnellipses = binnow >= binellipse(nellipses) ? nellipses : floor((binnow - binellipse(0))/ellipse_sep)
+# Make some convenience functions for getting the polarisation ellipses for the nth ellipse
+getQ(n) = system("awk '$3 == ".sprintf("%d", binellipse(n))." {print $5}' < ".infile) + 0.0
+getU(n) = system("awk '$3 == ".sprintf("%d", binellipse(n))." {print $6}' < ".infile) + 0.0
+getV(n) = system("awk '$3 == ".sprintf("%d", binellipse(n))." {print $7}' < ".infile) + 0.0
+getpsi(n) = psi(getQ(n), getU(n))
+getchi(n) = chi(getQ(n), getU(n), getV(n))
+
+set for [n=0:ndrawnellipses-1] \
+        object n+1 ellipse \
+        at first binellipse(n), I(I_max)/2 \
+        size 3*ellipse_sep*cos(getchi(n)), 3*ellipse_sep*sin(getchi(n)) \
+        angle getpsi(n)*180/pi - 45 \
+        units xx \
+        fs solid fc rgb "yellow" front
 
 set pm3d map
-splot infile u 3:(I($4)):(col($3)) every ::binstart::binnow with lines lw 2 lc palette z, \
-      infile u 3:(V($7)):(col($3)) every ::binstart::binnow with lines lw 2 lc palette z, \
+splot infile u 3:(I($4)):(col($3)) every ::binstart::binnow with lines lw 2 lc palette z

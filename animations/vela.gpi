@@ -5,6 +5,7 @@
 frontcolor = "white"
 backcolor = "black"
 profilecolor = "#88ff44"
+profile2color = "#ff5555"
 
 set terminal pngcairo background rgb backcolor
 call "clock.gpi" ARG1 ARG2
@@ -31,7 +32,7 @@ set arrow 1 from screen 0.01, 0.05 to screen 0.99, 0.05 heads back lc rgb frontc
 set label 1 sprintf("%.1f ms", timespan*1e3) at screen 0.5, 0.05 font ",16" tc rgb frontcolor center boxed bs 1 front
 
 # And now for the magic color animation!
-set palette defined (0 backcolor, 1 profilecolor)
+set palette defined (0 backcolor, 0.9 profilecolor, 1 profile2color)
 col(x) = (binnow >= binlo && binnow < binhi ? x : (x < binnow - binwidth ? 0 : (x - (binnow - binwidth))/binwidth))
 
 set pm3d map

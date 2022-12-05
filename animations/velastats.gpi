@@ -10,7 +10,8 @@ stats infile u 7 name 'V' nooutput
 nbins = I_records
 binpeak = I_index_max
 
-binradius = W10*1.5/P0 * nbins
+binW10 = nbins*W10/P0
+binradius = binW10*1.5
 binwidth = 2*binradius
 
 binlo = floor(binpeak - binradius)
@@ -24,8 +25,11 @@ stats infile u 5 every ::::binlo name 'Qnoise' nooutput
 stats infile u 6 every ::::binlo name 'Unoise' nooutput
 stats infile u 7 every ::::binlo name 'Vnoise' nooutput
 
+# These are not functions of phase or time, but rather maps between the values in the file and the "true" values
 I(x) = x - Inoise_mean
 Q(x) = x - Qnoise_mean
 U(x) = x - Unoise_mean
 V(x) = x - Vnoise_mean
 
+psi(Q, U) = 0.5*atan2(U, Q)
+chi(Q, U, V) = 0.5*atan2(V, sqrt(Q**2 + U**2))
