@@ -1,0 +1,34 @@
+# This script takes two arguments:
+#   1. frame number (0-indexed integer)
+#   2. number of frames
+
+load "colors.gpi"
+load "axes.gpi"
+call "clock.gpi" ARG1 ARG2
+
+set output sprintf("frames/EandBcirc_%02d.png", frame)
+
+set parametric
+set dummy y
+
+set urange [0:10]
+set samples 100
+
+λ = 2*pi
+k = 2*pi/λ
+c = λ/1     # "1" is the clock time for all frames
+ω = c/k
+t = clock
+
+wave(x,t,θ) = sin(k*x - ω*t + θ)
+
+narrows = 50
+arrow_to_y(i) = i*(yhi-ylo)*1.0/narrows
+
+θ = 0*pi/180.0
+
+set for [i=0:narrows-1] arrow i+4         from 0, arrow_to_y(i), 0 rto wave(arrow_to_y(i), t, 0   ), 0, wave(arrow_to_y(i), t, pi/2) lt 1 nohead
+set for [i=0:narrows-1] arrow i+4+narrows from 0, arrow_to_y(i), 0 rto wave(arrow_to_y(i), t, pi/2), 0, wave(arrow_to_y(i), t, pi  ) lt 2 nohead
+
+splot wave(y,t,0), y, wave(y,t,pi/2) with lines, \
+      wave(y,t,pi/2), y, wave(y,t,pi) with lines
