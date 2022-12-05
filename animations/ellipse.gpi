@@ -1,0 +1,24 @@
+# This script takes two arguments:
+#   1. frame number (0-indexed integer)
+#   2. number of frames
+
+load "colors.gpi"
+call "clock.gpi" ARG1 ARG2
+
+set output sprintf("frames/ellipse_%02d.png", frame)
+
+set parametric
+set dummy y
+
+set urange [0:10]
+set samples 100
+
+λ = 2*pi
+k = 2*pi/λ
+c = λ/1     # "1" is the clock time for all frames
+ω = c/k
+t = clock
+
+wave(x,t,θ) = sin(k*x - ω*t + θ)
+
+plot 
