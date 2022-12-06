@@ -1,0 +1,102 @@
+set terminal pngcairo background rgb "black" size 2400,600
+
+set output '0630_ellipses.png'
+
+set angle degrees
+
+mod(x,m) = x - floor(x/m)*m
+
+c = 3e8 # m/s
+flo = 140e6 # Hz
+fhi = 170e6 # Hz
+
+RM = 46.53 # rad/m^2 (the RM of B0628-28)
+
+ph_FR(f) = RM*(c/f)**2 * 180/pi # The Faraday rotation phase in degrees
+ps_LK(f) = 2e-06 * f + 50 # The leakage rotation in degrees
+
+# The intrinsic source polarisation (all constants)
+ph0 = 30 # degree
+V0 = -0.11
+L0 = sqrt(1 - V0**2)
+Q0 = L0*sin(2*ph0)
+U0 = L0*cos(2*ph0)
+ps0 = 0.5*atan2(V0,L0)
+
+# The polarisation expected from Faraday Rotation in the ISM
+ph1(f) = ph0 + ph_FR(f)
+V1(f) = V0
+L1(f) = sqrt(1 - V1(f)**2)
+Q1(f) = -L1(f)*cos(2*ph1(f))
+U1(f) = L1(f)*sin(2*ph1(f))
+ps1(f) = 0.5*atan2(V1(f), L1(f))
+
+# The polarisation you get after leakage (just between U and V)
+Q2(f) = Q1(f)
+ps2(f) = ps1(f)# + ps_LK(f)
+U2(f) = U1(f)*cos(ps_LK(f)) - V1(f)*sin(ps_LK(f))
+V2(f) = U1(f)*sin(ps_LK(f)) + V1(f)*cos(ps_LK(f))
+L2(f) = sqrt(Q2(f)**2 + U2(f)**2)
+ph2(f) = 0.5*atan2(U2(f), -Q2(f))
+ps2(f) = 0.5*atan2(V2(f), L2(f))
+
+# Decide where (i.e. at which frequencies) to draw the polarisation ellipses
+nellipses = 120
+df = (fhi - flo)/nellipses
+f0 = flo + df/2
+ellf(n) = f0 + (n - 1)*df # the first ellipse is n=1
+ellsize = 1
+
+set samples 1000
+set key tc rgb "white"
+unset border
+unset tics
+set margin
+
+set xrange [flo:fhi]
+#set yrange [0:1]
+
+set object 1000 rectangle from graph 0,0 to graph 1,1 fs empty border lc rgb "white" lw 3
+
+set lmargin at screen 0.005
+set rmargin at screen 0.995
+
+set multiplot
+
+set bmargin at screen 0.665
+set tmargin at screen 0.995
+
+set for [n=1:nellipses] object n ellipse \
+    center ellf(n), 0.5 \
+    size ellsize*df*cos(ps0), ellsize*df*sin(ps0) \
+    angle ph0 \
+    fs solid fc rgb "yellow" \
+    units xx
+#plot -1000 lw 3 lc rgb "white"
+plot Q0, U0, V0 with lines
+
+set bmargin at screen 0.335
+set tmargin at screen 0.665
+
+set for [n=1:nellipses] object n ellipse \
+    center ellf(n), 0.5 \
+    size ellsize*df*cos(ps1(ellf(n))), ellsize*df*sin(ps1(ellf(n))) \
+    angle ph1(ellf(n)) \
+    fs solid fc rgb "yellow" \
+    units xx
+#plot -1000 lw 3 lc rgb "white"
+plot Q1(x), U1(x), V1(x) with lines
+
+set bmargin at screen 0.005
+set tmargin at screen 0.335
+
+set for [n=1:nellipses] object n ellipse \
+    center ellf(n), 0.5 \
+    size ellsize*df*cos(ps2(ellf(n))), ellsize*df*sin(ps2(ellf(n))) \
+    angle ph2(ellf(n)) \
+    fs solid fc rgb "yellow" \
+    units xx
+#plot -1000 lw 3 lc rgb "white"
+plot Q2(x), U2(x), V2(x) with lines
+
+unset multiplot
