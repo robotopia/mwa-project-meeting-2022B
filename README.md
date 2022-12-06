@@ -13,5 +13,6 @@
 |  | `EandBcirc.gif` | Animation | Propagating EM waves in circular polarisation | `cd animations && make EandBcirc.gif` |
 |  | `vela.gif` | Animation | Vela's profile |  `cd animations && make vela.gif` |
 |  | `velapol.gif` | Animation | Vela's profile with polarisation ellipses |  `cd animations && make velapol.gif` |
-|  | `radhakrishnan4.png` | Image | Fig. 4 from [Radhakrishnan & Cooke (1969)](https://ui.adsabs.harvard.edu/abs/1969ApL.....3..225R/abstract) | [`images/radhakrishnan4.png`](images/radhakrishnan4.png) |
-|  | `mwatile.jpeg` | Image | Photo of MWA tile | From [https://www.skatelescope.org/multimedia/image/one-128-tiles-murchison-widefield-array-mwa-telescope/](https://www.skatelescope.org/multimedia/image/one-128-tiles-murchison-widefield-array-mwa-telescope/) |
+|  | [`radhakrishnan4.png`](images/radhakrishnan4.png) | Image | Fig. 4 from [Radhakrishnan & Cooke (1969)](https://ui.adsabs.harvard.edu/abs/1969ApL.....3..225R/abstract) | [`images/radhakrishnan4.png`](images/radhakrishnan4.png) |
+|  | [`mwatile.jpeg`](images/mwatile.jpg) | Image | Photo of MWA tile | From [https://www.skatelescope.org/multimedia/image/one-128-tiles-murchison-widefield-array-mwa-telescope/](https://www.skatelescope.org/multimedia/image/one-128-tiles-murchison-widefield-array-mwa-telescope/) |
+|  | [`0630.png`](images/0630.png) | Image | Plot of polarisation leakage in B0628-28 | Obtained from [here](https://github.com/CIRA-Pulsars-and-Transients-Group/SMART_deep_planning/blob/main/full_pol/polarisation_leakage_demo_B0628-28.png), which is in a private [Github repo pertaining to the SMART pulsar survey](https://github.com/CIRA-Pulsars-and-Transients-Group/SMART_deep_planning) |
