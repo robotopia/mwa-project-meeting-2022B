@@ -1,0 +1,62 @@
+# This script takes two arguments:
+#   1. frame number (0-indexed integer)
+#   2. number of frames
+
+set terminal pngcairo background rgb "black"
+call "clock.gpi" ARG1 ARG2
+set lmargin at screen 0.01
+set rmargin at screen 0.99
+set bmargin at screen 0.01
+set tmargin at screen 0.99
+
+xlo = -1; xhi = 1
+ylo = -1; yhi = 1
+
+set xrange [xlo:xhi]
+set yrange [ylo:yhi]
+set cbrange [0:2*pi]
+
+unset border
+unset key
+unset tics
+unset colorbox
+
+set output sprintf("frames/ellipsehv_%02d.png", frame)
+
+set parametric
+
+set urange [0:2*pi]
+set samples 1000
+
+t = -clock*2*pi
+
+Δθ = pi/5 # The phase difference between X and Y polarisations (0 = linear polarisation, pi/2 = circular polarisation)
+Ax = 0.4
+Ay = sqrt(1 - Ax**2)
+
+set arrow 1 from xlo,0 to xhi,0 lc rgb "white" heads front
+set arrow 2 from 0,ylo to 0,yhi lc rgb "white" heads front
+
+set arrow 3 from 0, 0 to Ax*sin(t), Ay*sin(t+Δθ) lc rgb "yellow"
+
+set arrow 4 from 0, 0 to Ax*sin(t), 0 lc rgb "#0000c0" lw 3 front
+set arrow 5 from Ax*sin(t), 0 to Ax*sin(t), Ay*sin(t+Δθ) dt 2 lc rgb "yellow" nohead
+
+set arrow 6 from 0, 0 to 0, Ay*sin(t+Δθ) lc rgb "#0000c0" lw 3 front
+set arrow 7 from 0, Ay*sin(t+Δθ) to Ax*sin(t), Ay*sin(t+Δθ) dt 2 lc rgb "yellow" nohead
+
+set pm3d map
+set palette defined (0 "#ffff00", 1 "#000000")
+
+# Draw two dipole antennas
+set object 1 rectangle \
+    center 0,0 \
+    size 0.8*(xhi-xlo), 0.05*(yhi-ylo) \
+    fs solid noborder fc rgb "#888888" front
+
+set object 2 rectangle \
+    center 0,0 \
+    size 0.04*(xhi-xlo), 1.0*(yhi-ylo) \
+    fs solid noborder fc rgb "#888888" front
+
+splot Ax*sin(u+t), Ay*sin(u+t+Δθ), u**2 with lines lt 2 lw 3 lc palette z
