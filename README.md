@@ -14,3 +14,4 @@
 |  | `vela.gif` | Animation | Vela's profile |  `cd animations && make vela.gif` |
 |  | `velapol.gif` | Animation | Vela's profile with polarisation ellipses |  `cd animations && make velapol.gif` |
 |  | `radhakrishnan4.png` | Image | Fig. 4 from [Radhakrishnan & Cooke (1969)](https://ui.adsabs.harvard.edu/abs/1969ApL.....3..225R/abstract) | [`images/radhakrishnan4.png`](images/radhakrishnan4.png) |
+|  | `mwatile.jpeg` | Image | Photo of MWA tile | From [https://www.skatelescope.org/multimedia/image/one-128-tiles-murchison-widefield-array-mwa-telescope/](https://www.skatelescope.org/multimedia/image/one-128-tiles-murchison-widefield-array-mwa-telescope/) |
