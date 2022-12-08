@@ -3,6 +3,8 @@
 ## Dependencies
 
 - `gnuplot >= 5.4.5`
+- [ImageMagick](https://imagemagick.org/index.php)
+  - e.g. `sudo apt install imagemagick` for Ubuntu
 
 ## List of figures
 
